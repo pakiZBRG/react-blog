@@ -1,0 +1,16 @@
+{
+  "name": "react-blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon server"
+  },
+  "keywords": [],
+  "author": "pakiZBRG",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.10.4"
+  }
+}
