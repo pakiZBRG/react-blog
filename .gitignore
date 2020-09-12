@@ -1,4 +1,4 @@
 node_modules
 .vscode
 
-server/dev.js
+dev.js

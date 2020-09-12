@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon server/index"
+    "server": "nodemon index"
   },
   "keywords": [],
   "author": "pakiZBRG",
