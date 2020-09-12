@@ -1,6 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const cookie = require('cookie-parser');
+const auth = require('../middleware/check-auth');
 const jwt = require('jsonwebtoken');
 const User = require('../model/User');
 const router = express.Router();
@@ -28,22 +28,6 @@ router.post('/register', async (req, res) => {
         }));
 });
 
-// Get info about user
-router.get('/:id', (req, res) => {
-    User.findById(req.params.id)
-        .then(user => {
-            res.status(200).json({
-                _id: user.id,
-                username: user.username,
-                email: user.email,
-                password: user.password,
-                name: user.name,
-                role: user.role,
-                token: user.token
-            })
-        })
-});
-
 //Login an user
 router.post('/login', async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
@@ -59,16 +43,40 @@ router.post('/login', async (req, res) => {
     });
 
     const token = jwt.sign(user._id.toHexString(), 'secret');
-    User.token = token;
-    user.save();
-    res.cookie('X_AUTH', User.token).status(200).json({
+    res.cookie('X_AUTH', token).status(200).json({
         message: `${user.username} is logged in`,
-        token: token
     })
 });
 
-router.get('/auth', (req, res) => {
-    
+//Logout
+router.get('/logout', auth, (req, res) => {
+    User.findOneAndUpdate({_id: req.user._id}, {token: ""}, (err, doc) => {
+        if(err) 
+            return res.status(400).json({
+                logout: false,
+                message: "There was problem with logging out"
+            })
+        return res.cookie('X_AUTH', '').status(200).json({
+            logout: true,
+            message: "User logged out"
+        })
+    })
 })
+
+// Get info about user
+router.get('/:id', auth, (req, res) => {
+    User.findById(req.params.id)
+        .then(user => {
+            res.status(200).json({
+                _id: user.id,
+                username: user.username,
+                email: user.email,
+                password: user.password,
+                name: user.name,
+                role: user.role,
+                token: user.token
+            })
+        })
+});
 
 module.exports = router;
