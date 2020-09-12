@@ -73,8 +73,7 @@ router.get('/:id', auth, (req, res) => {
                 email: user.email,
                 password: user.password,
                 name: user.name,
-                role: user.role,
-                token: user.token
+                role: user.role
             })
         })
 });
