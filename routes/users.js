@@ -37,13 +37,14 @@ router.post('/login', async (req, res) => {
     });
     
     const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if(!validPassword) return res.status(400).json({
+    if(!validPassword) return res.json({
         login: false,
         message: 'Invalid password'
     });
 
     const token = jwt.sign(user._id.toHexString(), 'secret');
     res.cookie('X_AUTH', token).status(200).json({
+        login: true,
         message: `${user.username} is logged in`,
     })
 });
